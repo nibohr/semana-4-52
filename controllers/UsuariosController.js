@@ -2,6 +2,7 @@
 const models = require("../models");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const token = require("../services/token");
 
 module.exports = {
   add: async (req, res, next) => {
@@ -105,40 +106,27 @@ module.exports = {
     }
   },
   login: async (req, res, next) => {
-    models.Usuario.findOne({
-      where: {
-        email: req.body.email,
-      },
-    })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).send("El usuario no existe.");
-        }
-        var passwordIsValid = bcrypt.compareSync(
-          req.body.password,
-          user.password
-        );
-        if (!passwordIsValid) {
-          return res.status(401).send({
-            auth: false,
-            tokenReturn: null,
-            reason: "Contraseña invalida!",
-          });
-        }
-
-        var token = jwt.sign(
-          { id: user.id, name: user.name, email: user.email },
-          'SuperSecreto',
-          {
-            expiresIn: 86400, // expires in 24 hours
-          }
-        );
-
-        res.status(200).send({ auth: true, tokenReturn: token });
-      })
-      .catch((err) => {
-        // res.status(500).send("Error -> " + err);
-        res.status(500).send("Algo ha salido mal =O");
+    try {
+      let user = await models.Usuario.findOne({
+        where: {
+          email: req.body.email,
+        },
       });
+      console.log(user);
+      if (user) {
+        let match = await bcrypt.compare(req.body.password, user.password);
+        if (match) {
+          let tokenReturn = await token.encode(user.id, user.rol);
+          res.status(200).json({ user, tokenReturn });
+        } else {
+          res.status(401).send({ message: "Contraseña invalida" });
+        }
+      } else {
+        res.status(404).send({ message: "El usuario no existe" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: "Algo malo ha sucedido =O" });
+      next(error);
+    }
   },
 };
