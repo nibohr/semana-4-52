@@ -4,7 +4,7 @@
         "host": "remotemysql.com",
         "database": "2Jv7KWSLGB",
         "username": "2Jv7KWSLGB",
-        "password": "BEH0t6w5pd"
+        "password": ""
     },
     "test": {
         "dialect": "sqlite",
