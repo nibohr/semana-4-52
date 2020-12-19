@@ -27,7 +27,7 @@ app.set('port', process.env.PORT || 3000);
 if (process.env.NODE_ENV !== 'test') {
     app.listen(app.get('port'), () => {
         console.log('Server on port ' + app.get('port') + ' on dev');
+        console.log(`Running on http://localhost:${app.get('port')}`);
     });
 }
-
 module.exports = app;
