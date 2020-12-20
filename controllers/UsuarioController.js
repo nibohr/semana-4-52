@@ -79,10 +79,10 @@ module.exports = {
         { estado: 1 },
         { where: { id: req.body.id } }
       );
-      if (!registro) {
-        res.statud(404).send("El ususario no existe");
+      if (registro==0) {
+        res.status(404).send("El ususario no existe");
       } else {
-        res.statud(200).json(registro);
+        res.status(200).json(registro);
       }
     } catch (error) {
       res.status(500).send({ message: "Algo ha salido mal =O" });
@@ -95,10 +95,10 @@ module.exports = {
         { estado: 0 },
         { where: { id: req.body.id } }
       );
-      if (!registro) {
-        res.statud(404).send("El ususario no existe");
+      if (registro==0) {
+        res.status(404).send("El ususario no existe");
       } else {
-        res.statud(200).json(registro);
+        res.status(200).json(registro);
       }
     } catch (error) {
       res.status(500).send({ message: "Algo ha salido mal =O" });
