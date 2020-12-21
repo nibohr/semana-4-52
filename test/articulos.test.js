@@ -10,7 +10,6 @@ describe('Articulos Endpoints', () => {
             .send({
                 email: 'prueba@gmail.com',
                 password: 'micontraseña',
-
             })
             .end((err, response) => {
                 var result = JSON.parse(response.text);

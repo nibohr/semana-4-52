@@ -9,7 +9,6 @@ async function checkToken(token) {
   } catch (e) {
     return false;
   }
-  console.log(__id);
   const user = await models.Usuario.findOne({
     where: { id: __id, estado: 1 },
   });
