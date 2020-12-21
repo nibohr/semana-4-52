@@ -25,7 +25,6 @@ module.exports = {
         references: {
           model: 'Categoria',
           key: 'id',
-          
         },
       },
       createdAt: {

@@ -1,13 +1,22 @@
 // const config = require("../secret/config.js");
 const models = require("../models");
-var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const token = require("../services/token");
 
 module.exports = {
   add: async (req, res, next) => {
     try {
-      const registro = await models.Usuario.create(req.body);
+      const pass = bcrypt.hashSync(req.body.password, 8);
+      // const pass = req.body.password;
+      const registro = await models.Usuario.create({
+        nombre: req.body.nombre,
+        email: req.body.email,
+        rol: req.body.rol,
+        password: pass,
+        estado: req.body.estado,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
       res.status(200).json(registro);
     } catch (error) {
       res.status(500).send({ message: "Algo ha salido mal =O" });
@@ -40,12 +49,13 @@ module.exports = {
   },
   update: async (req, res, next) => {
     try {
+      const pass = bcrypt.hashSync(req.body.password, 8);
       const registro = await models.Usuario.update(
         {
           nombre: req.body.nombre,
           rol: req.body.rol,
           email: req.body.email,
-          password: req.body.password,
+          password: pass,
         },
         { where: { id: req.body.id } }
       );
@@ -79,7 +89,7 @@ module.exports = {
         { estado: 1 },
         { where: { id: req.body.id } }
       );
-      if (registro==0) {
+      if (registro == 0) {
         res.status(404).send("El ususario no existe");
       } else {
         res.status(200).json(registro);
@@ -95,7 +105,7 @@ module.exports = {
         { estado: 0 },
         { where: { id: req.body.id } }
       );
-      if (registro==0) {
+      if (registro == 0) {
         res.status(404).send("El ususario no existe");
       } else {
         res.status(200).json(registro);
@@ -112,7 +122,6 @@ module.exports = {
           email: req.body.email,
         },
       });
-      console.log(user);
       if (user) {
         let match = await bcrypt.compare(req.body.password, user.password);
         if (match) {
