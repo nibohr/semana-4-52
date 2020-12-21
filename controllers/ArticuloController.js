@@ -17,7 +17,7 @@ module.exports = {
   list: async (req, res, next) => {
     try {
       const registro = await models.Articulo.findAll({
-        include: [{ model: models.Categoria, as: "categoria" }],
+        include: [{ model: models.Categoria, as: "categoria",required: true }],
       });
       res.status(200).json(registro);
     } catch (error) {
