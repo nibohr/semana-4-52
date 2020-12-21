@@ -25,7 +25,6 @@ module.exports = {
   },
   update: async (req, res, next) => {
     try {
-      console.log(`imprimiendo ${req.body}`)
       const numRegistros = await models.Categoria.update(
         {
           codigo: req.body.codigo,

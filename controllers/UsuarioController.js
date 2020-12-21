@@ -6,8 +6,7 @@ const token = require("../services/token");
 module.exports = {
   add: async (req, res, next) => {
     try {
-      console.log(req.body.password);
-      const pass = await bcrypt.hashSync(req.body.password, 8);
+      const pass = bcrypt.hashSync(req.body.password, 8);
       const registro = await models.Usuario.create({
         nombre: req.body.nombre,
         email: req.body.email,
@@ -49,7 +48,7 @@ module.exports = {
   },
   update: async (req, res, next) => {
     try {
-      const pass = await bcrypt.hash(req.body.password, 8);
+      const pass = bcrypt.hashSync(req.body.password, 8);
       const registro = await models.Usuario.update(
         {
           nombre: req.body.nombre,
@@ -123,9 +122,7 @@ module.exports = {
         },
       });
       if (user) {
-        console.log(req.body.password)
         let match = await bcrypt.compare(req.body.password, user.password);
-        console.log(match);
         if (match) {
           let tokenReturn = await token.encode(user.id, user.rol);
           res.status(200).json({ user, tokenReturn });
